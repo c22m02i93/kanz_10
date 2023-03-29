@@ -86,6 +86,3 @@ browse_button = ttk.Button(
 browse_button.grid(row=0, column=0, pady=10)
 
 root.mainloop()
-
-
-git clone < https: // github.com/c22m02i93/kanz_10.git >
