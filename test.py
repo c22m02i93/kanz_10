@@ -64,18 +64,29 @@ def display_tables(data_frames):
         separator = ttk.Frame(root, height=2, relief="sunken")
         separator.grid(row=i * 2 + 1, column=0, sticky="we", pady=5)
 
-        # Добавление кнопки сохранения таблицы из 3 и 4 колонки
+        # Добавление поля ввода для номеров столбцов
+        columns_label = ttk.Label(
+            table_frame, text="Столбцы (например, 2, 4):")
+        columns_label.grid(row=2, column=0, padx=5, sticky="w")
+
+        columns_entry = ttk.Entry(table_frame, width=10)
+        columns_entry.grid(row=2, column=0, padx=5)
+
+        # Добавление кнопки сохранения таблицы с выбранными столбцами
         save_button = ttk.Button(
-            table_frame, text="Сохранить таблицу", command=lambda df=df: save_table(df))
-        save_button.grid(row=2, column=0, pady=10)
+            table_frame, text="Сохранить таблицу", command=lambda: save_table(df, columns_entry.get()))
+        save_button.grid(row=2, column=0, padx=5, pady=10, sticky="e")
 
 
-def save_table(df):
-    selected_columns_df = df.loc[:, [2, 3]]
-    save_path = filedialog.asksaveasfilename(
-        filetypes=[("Excel files", "*.xlsx")])
-    if save_path:
-        selected_columns_df.to_excel(save_path, index=False)
+def save_table(df, columns_str):
+    if columns_str:
+        columns = columns_str.split(',')
+        columns = [int(col.strip()) - 1 for col in columns]
+        selected_columns_df = df.iloc[:, columns]
+        save_path = filedialog.asksaveasfilename(
+            filetypes=[("Excel files", "*.xlsx")], defaultextension=".xlsx")
+        if save_path:
+            selected_columns_df.to_excel(save_path, index=False)
 
 
 root = tk.Tk()
